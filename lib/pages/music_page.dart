@@ -21,12 +21,11 @@ class _MusicPageState extends ConsumerState<MusicPage> {
 
   @override
   void dispose() {
-    _audioPlayer.dispose(); // Otimização: libera memória e para o áudio
+    _audioPlayer.dispose();
     super.dispose();
   }
 
   Future<void> _playMusic() async {
-    // Exemplo: tocando um áudio de URL para facilitar o teste sem assets físicos
     await _audioPlayer.play(UrlSource('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'));
     setState(() => _isPlaying = true);
   }
@@ -40,7 +39,7 @@ class _MusicPageState extends ConsumerState<MusicPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Hora da Música'),
+        title: const Text('Musica'),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
       ),
@@ -51,7 +50,7 @@ class _MusicPageState extends ConsumerState<MusicPage> {
             const Icon(Icons.music_note, size: 150, color: Colors.blue),
             const SizedBox(height: 30),
             const Text(
-              'Vamos cantar juntos!',
+              'Player de Audio',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 50),

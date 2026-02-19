@@ -20,7 +20,7 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
   void initState() {
     super.initState();
     _flutterTts = FlutterTts();
-    _storyBox = Hive.box('settings'); // Usando o box já aberto no main
+    _storyBox = Hive.box('settings');
     _initTts();
     _loadDefaultStories();
   }
@@ -33,8 +33,8 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
   void _loadDefaultStories() {
     if (_storyBox.get('stories') == null) {
       _storyBox.put('stories', [
-        {'title': 'A Corujinha Sabida', 'content': 'Era uma vez uma corujinha que adorava ler livros mágicos.'},
-        {'title': 'O Robô Amigo', 'content': 'O robô Beto gosta de ajudar as crianças a aprender matemática.'},
+        {'title': 'A Corujinha Sabida', 'content': 'Era uma vez uma corujinha que adorava ler livros magicos.'},
+        {'title': 'O Robo Amigo', 'content': 'O robo Beto gosta de ajudar as criancas a aprender matematica.'},
       ]);
     }
   }
@@ -51,12 +51,12 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Adicionar Novo Livro'),
+        title: const Text('Adicionar Livro'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(controller: _titleController, decoration: const InputDecoration(labelText: 'Título')),
-            TextField(controller: _contentController, decoration: const InputDecoration(labelText: 'História'), maxLines: 3),
+            TextField(controller: _titleController, decoration: const InputDecoration(labelText: 'Titulo')),
+            TextField(controller: _contentController, decoration: const InputDecoration(labelText: 'Conteudo'), maxLines: 3),
           ],
         ),
         actions: [
@@ -84,7 +84,7 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Meus Livros Mágicos'),
+        title: const Text('Leitura'),
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
       ),

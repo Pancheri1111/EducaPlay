@@ -21,11 +21,11 @@ class LoginPage extends ConsumerWidget {
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.orange),
               ),
               const SizedBox(height: 8),
-              const Text('Aprender é divertido!', style: TextStyle(fontSize: 18)),
+              const Text('Aplicativo Educativo', style: TextStyle(fontSize: 18)),
               const SizedBox(height: 48),
               const TextField(
                 decoration: InputDecoration(
-                  labelText: 'Nome da Criança',
+                  labelText: 'Nome do Aluno',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.person),
                 ),
@@ -39,7 +39,7 @@ class LoginPage extends ConsumerWidget {
                   minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text('Entrar no Mundo Mágico', style: TextStyle(fontSize: 18)),
+                child: const Text('Entrar', style: TextStyle(fontSize: 18)),
               ),
             ],
           ),

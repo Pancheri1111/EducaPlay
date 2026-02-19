@@ -8,7 +8,7 @@ class MenuPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Menu do EducaPlay'),
+        title: const Text('Menu Principal'),
         centerTitle: true,
         backgroundColor: Colors.orange,
         foregroundColor: Colors.white,
@@ -29,7 +29,7 @@ class MenuPage extends ConsumerWidget {
           children: [
             _buildMenuCard(
               context,
-              'Músicas',
+              'Musicas',
               Icons.music_note,
               Colors.blue,
               '/music',
@@ -50,7 +50,7 @@ class MenuPage extends ConsumerWidget {
             ),
             _buildMenuCard(
               context,
-              'Configurações',
+              'Configuracoes',
               Icons.settings,
               Colors.grey,
               null,
