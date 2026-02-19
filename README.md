@@ -6,33 +6,40 @@ O EducaPlay e um aplicativo desenvolvido em Flutter focado em alfabetizacao, rac
 
 ## Como Rodar o Projeto
 
-1. Pré-requisitos: Ter o Flutter instalado em sua máquina.
+1. Pre-requisitos: Ter o Flutter SDK instalado em sua maquina.
 2. Instalar Dependencias:
    ```bash
    flutter pub get
    ```
-3. Executar no Emulador/Celular:
-   ```bash
-   flutter run -d android
-   ```
-   *(Ou use o Chrome com `flutter run -d chrome`)*
+3. Executar o Aplicativo:
+   - Para teste rapido de interface: `flutter run -d chrome` (Recomendado para quem vai mexer apenas no visual).
+   - Para teste no celular: `flutter run -d android` (Pode demorar na primeira execucao para baixar o NDK).
+
+---
+
+## Guia para os Desenvolvedores (Equipe)
+
+Cada integrante deve focar em sua area conforme combinado na estrutura de pastas em `lib/pages/`:
+
+- **Login e Cadastro:** Focar no arquivo `login_page.dart`.
+- **Modulo de Musica:** Implementar funcoes no arquivo `music_page.dart`.
+- **Modulo de Leitura:** Refinar as historias no arquivo `reading_page.dart`.
+- **Estrutura e Jogos:** (Area do Lider do Projeto) arquivos `games_page.dart` e `math_game_page.dart`.
+
+**Dica importante:** Se for testar no Android pela primeira vez, o Flutter pode baixar pacotes pesados (NDK). Se estiver com pressa, use o Chrome (`-d chrome`), que e instantaneo e nao precisa desses pacotes.
 
 ---
 
 ## Funcionalidades Principais
 
 ### 1. Modulo de Leitura
-Permite que a crianca leia historias magicas. 
-- Diferencial: O usuario (ou professor) pode adicionar seus proprios livros em formato de texto.
-- Tecnologia: Usa flutter_tts para que a Inteligencia Artificial leia a historia em voz alta para a crianca.
+Permite que a crianca leia historias magicas e que o usuario adicione novos livros. Usa flutter_tts para leitura em voz alta.
 
 ### 2. Modulo de Jogos (Matematica Infinita)
-Um desafio matematico que nunca acaba!
-- Dificuldade Progressiva: Quanto mais a crianca acerta, mais os numeros aumentam, estimulando o raciocinio.
-- Persistencia: O recorde (High Score) fica salvo no dispositivo usando o banco de dados Hive.
+Desafio matematico com dificuldade progressiva. Recordes sao salvos localmente com Hive.
 
 ### 3. Modulo de Musica
-Player de audio simples para tocar musicas educativas salvos no dispositivo.
+Player de audio para musicas educativas.
 
 ---
 
@@ -40,26 +47,19 @@ Player de audio simples para tocar musicas educativas salvos no dispositivo.
 
 O projeto foi estruturado para ser simples e didatico:
 - Linguagem Principal: Flutter (Dart).
-- Linguagem Nativa (Android): Java (configurado na pasta android/app/src/main/java).
-- Gerenciamento de Estado: Riverpod (para manter o app leve).
-- Banco de Dados Local: Hive (salvamento assincrono e rapido).
+- Linguagem Nativa (Android): Java.
+- Gerenciamento de Estado: Riverpod.
+- Banco de Dados Local: Hive.
 
 ---
 
 ## Organizacao de Arquivos
-- lib/main.dart: Ponto de entrada e rotas do app.
-- lib/pages/: Contem todas as telas do aplicativo (Login, Menu, Jogos, Leitura, Música).
-
----
-
-## Notas de Implementacao (Sprint 1)
-- Estrutura simplificada para facil manutencao.
-- Foco em performance e economia de bateria (uso de const e dispose).
-- Suporte total a dispositivos Android e Windows.
+- `lib/main.dart`: Entrada e rotas.
+- `lib/pages/`: Todas as telas do app.
 
 -------------------
 
-### COMANDOS DE MANUTENCAO (PARA DESENVOLVEDORES)
+### COMANDOS DE MANUTENCAO
 
 **Limpar o projeto:**
 ```bash
@@ -74,5 +74,9 @@ flutter build apk --release
 
 -------------------
 
-### Desenvolvido por:
-Equipe EducaPlay - Focado em Educacao e Tecnologia.
+### Equipe de Desenvolvimento e Licenca:
+Desenvolvido por:
+- Equipe EducaPlay
+- Giovanni Silveira
+
+Licenca: MIT - Uso educacional livre.

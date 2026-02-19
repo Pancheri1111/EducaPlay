@@ -1,7 +1,6 @@
 name: educaplay
-description: "EducaPlay - Aplicativo educativo infantil para alfabetização e desenvolvimento cognitivo."
+description: "EducaPlay - Aplicativo educativo infantil"
 publish_to: 'none'
-
 version: 1.0.0+1
 
 environment:
@@ -11,29 +10,16 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Gerenciamento de Estado (Básico para a Sprint 1)
-  flutter_riverpod: ^2.4.9
+  flutter_riverpod: ^2.5.1
   equatable: ^2.0.5
-
-  # Navegação
   go_router: ^13.2.0
-
-  # Áudio (Usando apenas o Audioplayers para evitar conflito)
   audioplayers: ^5.2.1
-
-  # Seleção de Arquivos (Para você baixar as músicas como usuário)
-  file_picker: ^6.1.1
+  file_picker: ^8.0.0
   permission_handler: ^11.3.1
-
-  # Text-to-Speech (Para a IA ler as histórias)
   flutter_tts: ^3.8.5
-
-  # Persistência local (Para salvar os pontos dos jogos e as histórias)
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   path_provider: ^2.1.2
-
-  # UI/UX e Estilo
   google_fonts: ^6.1.0
   cupertino_icons: ^1.0.8
 
@@ -46,7 +32,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-  # Removi as pastas de assets que não existem no seu PC para o app não dar erro ao abrir
   assets:
     - assets/images/
