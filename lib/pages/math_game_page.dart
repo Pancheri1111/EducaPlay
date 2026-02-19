@@ -53,11 +53,11 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
       });
       _generateProblem();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Correto!'), backgroundColor: Colors.green, duration: Duration(seconds: 1)),
+        const SnackBar(content: Text('Correto'), backgroundColor: Colors.green, duration: Duration(seconds: 1)),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Errado! Tente de novo.'), backgroundColor: Colors.red, duration: Duration(seconds: 1)),
+        const SnackBar(content: Text('Tente novamente'), backgroundColor: Colors.red, duration: Duration(seconds: 1)),
       );
     }
   }
@@ -66,7 +66,7 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Desafio de Matemática'),
+        title: const Text('Matematica'),
         backgroundColor: Colors.red,
         foregroundColor: Colors.white,
       ),
@@ -75,7 +75,7 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Pontuação: $_score', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            Text('Pontos: $_score', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             Text('Recorde: $_highScore', style: const TextStyle(fontSize: 18, color: Colors.grey)),
             const SizedBox(height: 40),
             Container(
