@@ -11,66 +11,42 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Gerenciamento de Estado
-  riverpod: ^2.4.0
-  flutter_riverpod: ^2.4.0
+  # Gerenciamento de Estado (Básico para a Sprint 1)
+  flutter_riverpod: ^2.4.9
+  equatable: ^2.0.5
 
   # Navegação
-  go_router: ^13.0.0
+  go_router: ^13.2.0
 
-  # Requisições HTTP
-  dio: ^5.3.0
+  # Áudio (Usando apenas o Audioplayers para evitar conflito)
+  audioplayers: ^5.2.1
 
-  # Áudio
-  just_audio: ^0.9.34
-  audio_service: ^0.18.13
+  # Seleção de Arquivos (Para você baixar as músicas como usuário)
+  file_picker: ^6.1.1
+  permission_handler: ^11.3.1
 
-  # YouTube
-  youtube_player_flutter: ^8.1.2
+  # Text-to-Speech (Para a IA ler as histórias)
+  flutter_tts: ^3.8.5
 
-  # Text-to-Speech
-  flutter_tts: 4.2.5
-
-  # Animações
-  lottie: ^2.6.0
-
-  # Persistência local
+  # Persistência local (Para salvar os pontos dos jogos e as histórias)
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  path_provider: ^2.1.2
 
-  # UI/UX
-  flutter_screenutil: ^5.9.0
+  # UI/UX e Estilo
   google_fonts: ^6.1.0
-
-  # Utilitários
-  intl: ^0.19.0
-  uuid: ^4.0.0
-  logger: ^2.0.0
-
-  # Icons
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^3.0.0
-  build_runner: ^2.4.0
-  hive_generator: ^2.0.0
+  build_runner: ^2.4.8
+  hive_generator: ^2.0.1
 
 flutter:
   uses-material-design: true
 
+  # Removi as pastas de assets que não existem no seu PC para o app não dar erro ao abrir
   assets:
     - assets/images/
-    - assets/audio/
-    - assets/lottie/
-
-  fonts:
-    - family: Poppins
-      fonts:
-        - asset: assets/fonts/Poppins-Regular.ttf
-        - asset: assets/fonts/Poppins-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/Poppins-SemiBold.ttf
-          weight: 600
