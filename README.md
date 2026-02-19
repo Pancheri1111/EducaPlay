@@ -45,7 +45,7 @@ Player de audio para musicas educativas.
 
 ## Estrutura Tecnica (Flutter + Java)
 
-O projeto foi estruturado para ser simples e didatico:
+O projeto foi estruturado para ser:
 - Linguagem Principal: Flutter (Dart).
 - Linguagem Nativa (Android): Java.
 - Gerenciamento de Estado: Riverpod.
@@ -77,6 +77,5 @@ flutter build apk --release
 ### Equipe de Desenvolvimento e Licenca:
 Desenvolvido por:
 - Equipe EducaPlay
-- Giovanni Silveira
 
 Licenca: MIT - Uso educacional livre.
