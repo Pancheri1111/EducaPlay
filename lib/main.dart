@@ -3,11 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'pages/login_page.dart';
 import 'pages/menu_page.dart';
 import 'pages/music_page.dart';
 import 'pages/reading_page.dart';
 import 'pages/games_page.dart';
 import 'pages/math_game_page.dart';
+import 'pages/subtraction_game_page.dart';
+import 'pages/tic_tac_toe_page.dart';
+import 'pages/memory_game_page.dart';
 
 void main() async {
   // Inicializacao do Flutter
@@ -38,13 +42,16 @@ class EducaPlayApp extends StatelessWidget {
         useMaterial3: true,
         textTheme: GoogleFonts.comicNeueTextTheme(),
       ),
-      home: const MenuPage(),
+      home: const LoginPage(),
       routes: {
         '/menu': (context) => const MenuPage(),
         '/music': (context) => const MusicPage(),
         '/reading': (context) => const ReadingPage(),
         '/games': (context) => const GamesPage(),
         '/math_game': (context) => const MathGamePage(),
+        '/subtraction_game': (context) => const SubtractionGamePage(),
+        '/memory_game': (context) => const MemoryGamePage(),
+        '/tic_tac_toe': (context) => const TicTacToePage(),
       },
     );
   }

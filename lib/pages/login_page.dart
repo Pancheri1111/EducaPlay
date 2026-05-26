@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+
+import '../data/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,21 +10,46 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final senhaController = TextEditingController();
+  final authService = AuthService();
 
-  void _login() async {
-    final name = _nameController.text.trim();
-    if (name.isNotEmpty) {
-      // Salva o nome do aluno no banco de dados local (Hive)
-      final settingsBox = Hive.box('settings');
-      await settingsBox.put('student_name', name);
-      
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/menu');
-      }
-    } else {
+  Future<void> fazerLogin() async {
+    final sucesso = await authService.login(
+      emailController.text.trim(),
+      senhaController.text.trim(),
+    );
+
+    if (sucesso) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor, digite seu nome para entrar!')),
+        const SnackBar(content: Text('Login realizado com sucesso')),
+      );
+      Navigator.pushReplacementNamed(context, '/menu');
+    } else {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Preencha todos os campos corretamente')),
+      );
+    }
+  }
+
+  Future<void> registrarUsuario() async {
+    final sucesso = await authService.registrar(
+      emailController.text.trim(),
+      senhaController.text.trim(),
+    );
+
+    if (sucesso) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registro realizado com sucesso')),
+      );
+      Navigator.pushReplacementNamed(context, '/menu');
+    } else {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Preencha todos os campos para registrar')),
       );
     }
   }
@@ -39,61 +64,52 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.orange.withOpacity(0.3),
-                      blurRadius: 10,
-                      spreadRadius: 5,
-                    ),
-                  ],
-                ),
-                child: const Icon(Icons.school, size: 80, color: Colors.orange),
-              ),
-              const SizedBox(height: 24),
+              const Icon(Icons.school, size: 100, color: Colors.orange),
+              const SizedBox(height: 16),
               const Text(
                 'EducaPlay',
-                style: TextStyle(
-                  fontSize: 40, 
-                  fontWeight: FontWeight.bold, 
-                  color: Colors.orange,
-                  letterSpacing: 2,
-                ),
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.orange),
               ),
-              const Text(
-                'Aprender é divertido!',
-                style: TextStyle(fontSize: 18, color: Colors.orangeAccent, fontStyle: FontStyle.italic),
-              ),
-              const SizedBox(height: 48),
+              const SizedBox(height: 8),
+              const Text('Aplicativo Educativo', style: TextStyle(fontSize: 18)),
+              const SizedBox(height: 32),
               TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: 'Nome do Aluno',
-                  hintText: 'Como você se chama?',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide.none,
-                  ),
-                  prefixIcon: const Icon(Icons.face, color: Colors.orange),
+                controller: emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.email),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
+              TextField(
+                controller: senhaController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Senha',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.lock),
+                ),
+              ),
+              const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: _login,
+                onPressed: fazerLogin,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
                   foregroundColor: Colors.white,
-                  minimumSize: const Size(double.infinity, 60),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                  elevation: 5,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text('VAMOS COMEÇAR!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                child: const Text('Entrar', style: TextStyle(fontSize: 18)),
+              ),
+              const SizedBox(height: 16),
+              OutlinedButton(
+                onPressed: registrarUsuario,
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text('Registrar', style: TextStyle(fontSize: 18)),
               ),
             ],
           ),

@@ -8,13 +8,12 @@ class MenuPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('EducaPlay'),
+        title: const Text('Menu Principal'),
         centerTitle: true,
         backgroundColor: Colors.orange,
         foregroundColor: Colors.white,
       ),
       body: Container(
-        width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -22,59 +21,39 @@ class MenuPage extends ConsumerWidget {
             colors: [Colors.orange[100]!, Colors.white],
           ),
         ),
-        child: Column(
+        child: GridView.count(
+          padding: const EdgeInsets.all(20),
+          crossAxisCount: 2,
+          mainAxisSpacing: 20,
+          crossAxisSpacing: 20,
           children: [
-            const SizedBox(height: 40),
-            const Text(
-              'Bem-vindo ao EducaPlay!',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.orange,
-              ),
+            _buildMenuCard(
+              context,
+              'Musicas',
+              Icons.music_note,
+              Colors.blue,
+              '/music',
             ),
-            const Text(
-              'Escolha uma atividade abaixo:',
-              style: TextStyle(fontSize: 18, color: Colors.black54),
+            _buildMenuCard(
+              context,
+              'Leitura',
+              Icons.book,
+              Colors.green,
+              '/reading',
             ),
-            const SizedBox(height: 40),
-            Expanded(
-              child: GridView.count(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                crossAxisCount: 2,
-                mainAxisSpacing: 20,
-                crossAxisSpacing: 20,
-                children: [
-                  _buildMenuCard(
-                    context,
-                    'Músicas',
-                    Icons.music_note,
-                    Colors.blue,
-                    '/music',
-                  ),
-                  _buildMenuCard(
-                    context,
-                    'Leitura',
-                    Icons.book,
-                    Colors.green,
-                    '/reading',
-                  ),
-                  _buildMenuCard(
-                    context,
-                    'Jogos',
-                    Icons.videogame_asset,
-                    Colors.red,
-                    '/games',
-                  ),
-                  _buildMenuCard(
-                    context,
-                    'Ajustes',
-                    Icons.settings,
-                    Colors.purple,
-                    null,
-                  ),
-                ],
-              ),
+            _buildMenuCard(
+              context,
+              'Jogos',
+              Icons.videogame_asset,
+              Colors.red,
+              '/games',
+            ),
+            _buildMenuCard(
+              context,
+              'Configuracoes',
+              Icons.settings,
+              Colors.grey,
+              null,
             ),
           ],
         ),
@@ -85,28 +64,17 @@ class MenuPage extends ConsumerWidget {
   Widget _buildMenuCard(BuildContext context, String title, IconData icon, Color color, String? route) {
     return InkWell(
       onTap: route != null ? () => Navigator.pushNamed(context, route) : null,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(25),
-          boxShadow: [
-            BoxShadow(
-              color: color.withOpacity(0.2),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-          border: Border.all(color: color.withOpacity(0.5), width: 2),
-        ),
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 60, color: color),
-            const SizedBox(height: 12),
+            Icon(icon, size: 50, color: color),
+            const SizedBox(height: 10),
             Text(
               title,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ],
         ),
