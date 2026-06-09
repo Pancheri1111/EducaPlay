@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../data/settings_provider.dart';
 
-enum MathType { addition, subtraction, multiplication }
+enum MathType { addition, subtraction, multiplication, division }
 
 class MathGamePage extends ConsumerStatefulWidget {
   const MathGamePage({super.key});
@@ -20,6 +20,8 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
   final Random _random = Random();
   late Box _scoreBox;
 
+  bool _gameStarted = false;
+
   MathType _type = MathType.addition;
   int _difficulty = 1; 
   int _level = 1;
@@ -30,6 +32,7 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
     MathType.addition: 0,
     MathType.subtraction: 0,
     MathType.multiplication: 0,
+    MathType.division: 0,
   };
 
   @override
@@ -62,6 +65,8 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
         return 'Subtração';
       case MathType.multiplication:
         return 'Multiplicação';
+      case MathType.division:
+        return 'Divisão';
     }
   }
 
@@ -174,6 +179,13 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
         SnackBar(content: Text(lang.translate('try_again')), backgroundColor: Colors.orange),
       );
     }
+  }
+
+  void _startGame() {
+    setState(() {
+      _gameStarted = true;
+      _generateProblem();
+    });
   }
 
   @override

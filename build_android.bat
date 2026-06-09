@@ -16,18 +16,39 @@ echo Building Android release APK for EducaPlay
 echo ==========================================
 echo.
 
-echo Running flutter pub get...
-flutter pub get
+set "FLUTTER_CMD="
+where flutter >nul 2>&1
+if %ERRORLEVEL%==0 (
+  set "FLUTTER_CMD=flutter"
+) else (
+  if defined FLUTTER_HOME if exist "%FLUTTER_HOME%\bin\flutter.bat" set "FLUTTER_CMD=%FLUTTER_HOME%\bin\flutter.bat"
+  if not defined FLUTTER_CMD if defined FLUTTER_ROOT if exist "%FLUTTER_ROOT%\bin\flutter.bat" set "FLUTTER_CMD=%FLUTTER_ROOT%\bin\flutter.bat"
+  if not defined FLUTTER_CMD if exist "C:\src\flutter\bin\flutter.bat" set "FLUTTER_CMD=C:\src\flutter\bin\flutter.bat"
+  if not defined FLUTTER_CMD if exist "C:\flutter\bin\flutter.bat" set "FLUTTER_CMD=C:\flutter\bin\flutter.bat"
+  if not defined FLUTTER_CMD if exist "%USERPROFILE%\flutter\bin\flutter.bat" set "FLUTTER_CMD=%USERPROFILE%\flutter\bin\flutter.bat"
+)
+
+if not defined FLUTTER_CMD (
+  echo ERRO: Flutter não encontrado no PATH.
+  echo Instale o Flutter ou adicione "C:\src\flutter\bin" ao PATH.
+  echo Exemplo: setx PATH "C:\src\flutter\bin;%%PATH%%"
+  exit /b 1
+)
+
+echo Usando Flutter em: %FLUTTER_CMD%
+
+echo Running %FLUTTER_CMD% pub get...
+%FLUTTER_CMD% pub get
 if errorlevel 1 (
-  echo ERRO: flutter pub get falhou.
+  echo ERRO: %FLUTTER_CMD% pub get falhou.
   exit /b 1
 )
 
 echo.
 echo Building release APK...
-flutter build apk --release
+%FLUTTER_CMD% build apk --release
 if errorlevel 1 (
-  echo ERRO: flutter build apk falhou.
+  echo ERRO: %FLUTTER_CMD% build apk falhou.
   exit /b 1
 )
 

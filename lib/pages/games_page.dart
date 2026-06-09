@@ -77,4 +77,46 @@ class GamesPage extends ConsumerWidget {
       ),
     );
   }
+
+  Widget _buildGameCard(BuildContext context, String title, String subtitle, IconData icon, Color color, String route) {
+    return InkWell(
+      onTap: () => Navigator.pushNamed(context, route),
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 18),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 28,
+              backgroundColor: color.withOpacity(0.15),
+              child: Icon(icon, size: 28, color: color),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 6),
+                  Text(subtitle, style: const TextStyle(fontSize: 14, color: Colors.black54)),
+                ],
+              ),
+            ),
+            Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black26),
+          ],
+        ),
+      ),
+    );
+  }
 }
