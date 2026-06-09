@@ -77,38 +77,4 @@ class GamesPage extends ConsumerWidget {
       ),
     );
   }
-
-  Widget _buildGameCard(BuildContext context, String title, String subtitle, IconData icon, Color color, String? route) {
-    return InkWell(
-      onTap: route != null ? () => Navigator.pushNamed(context, route) : null,
-      child: Card(
-        elevation: 6,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: color.withOpacity(0.1), shape: BoxShape.circle),
-                child: Icon(icon, size: 40, color: color),
-              ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                    Text(subtitle, style: const TextStyle(fontSize: 14, color: Colors.black54)),
-                  ],
-                ),
-              ),
-              const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }

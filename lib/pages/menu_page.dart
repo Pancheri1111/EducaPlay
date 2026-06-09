@@ -14,13 +14,12 @@ class MenuPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('EducaPlay'),
+        title: const Text('Menu Principal'),
         centerTitle: true,
         backgroundColor: themeColor,
         foregroundColor: Colors.white,
       ),
       body: Container(
-        width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -28,7 +27,11 @@ class MenuPage extends ConsumerWidget {
             colors: [themeColor.withOpacity(0.2), Colors.white],
           ),
         ),
-        child: Column(
+        child: GridView.count(
+          padding: const EdgeInsets.all(20),
+          crossAxisCount: 2,
+          mainAxisSpacing: 20,
+          crossAxisSpacing: 20,
           children: [
             const SizedBox(height: 40),
             Text(
@@ -91,28 +94,17 @@ class MenuPage extends ConsumerWidget {
   Widget _buildMenuCard(BuildContext context, String title, IconData icon, Color color, String? route) {
     return InkWell(
       onTap: route != null ? () => Navigator.pushNamed(context, route) : null,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(25),
-          boxShadow: [
-            BoxShadow(
-              color: color.withOpacity(0.2),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-          border: Border.all(color: color.withOpacity(0.5), width: 2),
-        ),
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 60, color: color),
-            const SizedBox(height: 12),
+            Icon(icon, size: 50, color: color),
+            const SizedBox(height: 10),
             Text(
               title,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ],
         ),

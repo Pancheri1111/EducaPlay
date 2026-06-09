@@ -1,10 +1,11 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../data/settings_provider.dart';
 
-enum MathType { addition, subtraction, multiplication, division }
+enum MathType { addition, subtraction, multiplication }
 
 class MathGamePage extends ConsumerStatefulWidget {
   const MathGamePage({super.key});
@@ -25,21 +26,54 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
   late int _num1;
   late int _num2;
   late int _answer;
-  bool _gameStarted = false;
+  final Map<MathType, int> _highScores = {
+    MathType.addition: 0,
+    MathType.subtraction: 0,
+    MathType.multiplication: 0,
+  };
 
   @override
   void initState() {
     super.initState();
     _scoreBox = Hive.box('scores');
+    _loadState();
+    _generateProblem();
   }
 
-  void _startGame() {
-    setState(() {
-      _gameStarted = true;
-      _score = 0;
-      _level = 1;
-      _generateProblem();
-    });
+  void _loadState() {
+    _type = MathType.values[_scoreBox.get('math_type', defaultValue: 0) as int];
+    _difficulty = _scoreBox.get('math_difficulty', defaultValue: 1) as int;
+    _level = _scoreBox.get('math_level', defaultValue: 1) as int;
+
+    for (final type in MathType.values) {
+      _highScores[type] = _scoreBox.get(_highScoreKey(type), defaultValue: 0) as int;
+    }
+  }
+
+  String _highScoreKey(MathType type) {
+    return 'math_highscore_${type.name}';
+  }
+
+  String _typeName(MathType type) {
+    switch (type) {
+      case MathType.addition:
+        return 'Soma';
+      case MathType.subtraction:
+        return 'Subtração';
+      case MathType.multiplication:
+        return 'Multiplicação';
+    }
+  }
+
+  String _difficultyName(int difficulty) {
+    switch (difficulty) {
+      case 1:
+        return 'Fácil';
+      case 2:
+        return 'Médio';
+      default:
+        return 'Difícil';
+    }
   }
 
   void _generateProblem() {
@@ -75,13 +109,64 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
     });
   }
 
+  void _saveState() {
+    _scoreBox.put('math_type', _type.index);
+    _scoreBox.put('math_difficulty', _difficulty);
+    _scoreBox.put('math_level', _level);
+    _scoreBox.put(_highScoreKey(_type), _highScores[_type]);
+  }
+
+  void _changeType(MathType type) {
+    setState(() {
+      _type = type;
+      _score = 0;
+      _level = 1;
+      _saveState();
+      _generateProblem();
+    });
+  }
+
+  void _setDifficulty(int difficulty) {
+    setState(() {
+      _difficulty = difficulty;
+      _score = 0;
+      _saveState();
+      _generateProblem();
+    });
+  }
+
+  void _changeLevel(int delta) {
+    final newLevel = (_level + delta).clamp(1, 5);
+    if (newLevel != _level) {
+      setState(() {
+        _level = newLevel;
+        _score = 0;
+        _saveState();
+        _generateProblem();
+      });
+    }
+  }
+
   void _checkAnswer() {
     final lang = ref.read(languageProvider.notifier);
     final userAnswer = int.tryParse(_controller.text);
     if (userAnswer == _answer) {
       setState(() {
         _score++;
-        if (_score % 3 == 0) _level++;
+        if (_score > _highScores[_type]!) {
+          _highScores[_type] = _score;
+        }
+        if (_score % 3 == 0 && _level < 5) {
+          _level++;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Parabéns! Você passou para o nível $_level.'),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+        _saveState();
       });
       _generateProblem();
     } else {
@@ -192,18 +277,19 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(40),
+              padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: const Color(0xFF2E4D2E),
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(color: Colors.brown, width: 8),
+                color: Colors.red[50],
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.red, width: 2),
               ),
               child: Text(
-                '$_num1 ${_typeChar(_type)} $_num2 = ?',
-                style: const TextStyle(fontSize: 50, color: Colors.white, fontWeight: FontWeight.bold, fontFamily: 'monospace'),
+                '$_num1 ${_type == MathType.addition ? '+' : _type == MathType.subtraction ? '-' : '×'} $_num2 = ?',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 42, fontWeight: FontWeight.bold, color: Colors.red),
               ),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
             TextField(
               controller: _controller,
               keyboardType: TextInputType.number,
@@ -218,14 +304,13 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
               ),
               onSubmitted: (_) => _checkAnswer(),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _checkAnswer,
               style: ElevatedButton.styleFrom(
                 backgroundColor: themeColor,
                 foregroundColor: Colors.white,
-                minimumSize: const Size(double.infinity, 70),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                minimumSize: const Size.fromHeight(55),
               ),
               child: Text(lang.translate('check'), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             ),
