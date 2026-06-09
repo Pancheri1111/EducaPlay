@@ -3,23 +3,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/auth_service.dart';
 import '../data/settings_provider.dart';
 
-class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends ConsumerStatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  ConsumerState<LoginPage> createState() => _LoginPageState();
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _RegisterPageState extends ConsumerState<RegisterPage> {
   final emailController = TextEditingController();
   final senhaController = TextEditingController();
   final authService = AuthService();
 
-  Future<void> fazerLogin() async {
+  Future<void> fazerRegistro() async {
     final lang = ref.read(languageProvider.notifier);
-    bool sucesso = await authService.login(emailController.text, senhaController.text);
+    bool sucesso = await authService.registrar(emailController.text, senhaController.text);
 
     if (sucesso) {
+      // AUTO-LOGIN: Entra direto
       Navigator.pushReplacementNamed(context, '/menu');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -37,7 +38,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(lang.translate('login')),
+        title: Text(lang.translate('register')),
         backgroundColor: themeColor,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -47,14 +48,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         child: Center(
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // SUA LOGO PERSONALIZADA
                 Image.asset(
                   'assets/images/imagem_logo.png',
-                  height: 180,
+                  height: 150,
                   errorBuilder: (context, error, stackTrace) => 
-                    Icon(Icons.school, size: 100, color: themeColor),
+                    Icon(Icons.person_add, size: 80, color: themeColor),
                 ),
                 const SizedBox(height: 30),
                 TextField(
@@ -64,7 +64,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
                   ),
                 ),
-                const SizedBox(height: 15),
+                const SizedBox(height: 16),
                 TextField(
                   controller: senhaController,
                   obscureText: true,
@@ -73,18 +73,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 30),
                 ElevatedButton(
-                  onPressed: fazerLogin,
+                  onPressed: fazerRegistro,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: themeColor,
+                    foregroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 60),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                   ),
-                  child: Text(lang.translate('login'), style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                  child: Text(lang.translate('reg_btn'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ),
-                const SizedBox(height: 12),
-                // BOTÃO CONVIDADO
+                const SizedBox(height: 10),
+                // OPÇÃO CONVIDADO NO CADASTRO
                 OutlinedButton(
                   onPressed: () {
                     authService.entrarComoConvidado();
@@ -99,8 +100,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
                 const SizedBox(height: 15),
                 TextButton(
-                  onPressed: () => Navigator.pushNamed(context, '/register'),
-                  child: Text(lang.translate('no_acc')),
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(lang.translate('has_acc')),
                 ),
               ],
             ),

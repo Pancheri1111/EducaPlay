@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import '../data/settings_provider.dart';
 
 enum MathType { addition, subtraction, multiplication, division }
 
@@ -19,7 +20,7 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
   late Box _scoreBox;
 
   MathType _type = MathType.addition;
-  int _difficulty = 1; // 1 = Fácil, 2 = Médio, 3 = Difícil
+  int _difficulty = 1; 
   int _level = 1;
   late int _num1;
   late int _num2;
@@ -43,7 +44,6 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
 
   void _generateProblem() {
     setState(() {
-      // Ajuste de base conforme dificuldade e nível
       int baseRange = 10 * _difficulty;
       int growth = (_level - 1) * 5;
       int range = baseRange + growth;
@@ -66,7 +66,6 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
           _answer = _num1 * _num2;
           break;
         case MathType.division:
-          // Garante que a divisão seja exata para crianças
           _num2 = _random.nextInt(5 * _difficulty) + 1;
           _answer = _random.nextInt(10 * _difficulty) + 1;
           _num1 = _num2 * _answer;
@@ -77,6 +76,7 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
   }
 
   void _checkAnswer() {
+    final lang = ref.read(languageProvider.notifier);
     final userAnswer = int.tryParse(_controller.text);
     if (userAnswer == _answer) {
       setState(() {
@@ -86,63 +86,70 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
       _generateProblem();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ops! Tente de novo! ✍️'), backgroundColor: Colors.orange),
+        SnackBar(content: Text(lang.translate('try_again')), backgroundColor: Colors.orange),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final lang = ref.read(languageProvider.notifier);
+    ref.watch(languageProvider);
+    final themeColor = ref.watch(themeColorProvider);
+
     if (!_gameStarted) {
-      return _buildSetupScreen();
+      return _buildSetupScreen(lang, themeColor);
     }
-    return _buildGameScreen();
+    return _buildGameScreen(lang, themeColor);
   }
 
-  // TELA DE ESCOLHA (Dificuldade e Tipo)
-  Widget _buildSetupScreen() {
+  Widget _buildSetupScreen(LanguageNotifier lang, Color themeColor) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Configurar Jogo'), backgroundColor: Colors.red, foregroundColor: Colors.white),
+      appBar: AppBar(
+        title: Text(lang.translate('math_setup')), // CORREÇÃO: Usa o tradutor
+        backgroundColor: themeColor, 
+        foregroundColor: Colors.white
+      ),
       body: Container(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text('O que vamos praticar?', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            Text(lang.translate('math_op'), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)), // CORREÇÃO
             const SizedBox(height: 15),
             Wrap(
               spacing: 10,
               children: MathType.values.map((type) {
                 return ChoiceChip(
-                  label: Text(_typeName(type)),
+                  label: Text(lang.translate(type.name)), // Busca a tradução do nome da operação
                   selected: _type == type,
                   onSelected: (val) => setState(() => _type = type),
-                  selectedColor: Colors.red[100],
+                  selectedColor: themeColor.withOpacity(0.2),
                 );
               }).toList(),
             ),
             const SizedBox(height: 30),
-            const Text('Qual o nível de desafio?', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            Text(lang.translate('math_diff'), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)), // CORREÇÃO
             const SizedBox(height: 15),
             Row(
               children: [
-                _difficultyCard(1, 'Fácil', Colors.green),
+                _difficultyCard(1, lang.translate('easy'), Colors.green),
                 const SizedBox(width: 10),
-                _difficultyCard(2, 'Médio', Colors.orange),
+                _difficultyCard(2, lang.translate('medium'), Colors.orange),
                 const SizedBox(width: 10),
-                _difficultyCard(3, 'Difícil', Colors.red),
+                _difficultyCard(3, lang.translate('hard'), Colors.red),
               ],
             ),
             const Spacer(),
             ElevatedButton(
               onPressed: _startGame,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
+                backgroundColor: themeColor,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
               ),
-              child: const Text('COMEÇAR DESAFIO!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              child: Text(lang.translate('play'), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             ),
           ],
         ),
@@ -172,12 +179,11 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
     );
   }
 
-  // TELA DO JOGO EM SI
-  Widget _buildGameScreen() {
+  Widget _buildGameScreen(LanguageNotifier lang, Color themeColor) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${_typeName(_type)} - Nível $_level'),
-        backgroundColor: Colors.red,
+        title: Text('${lang.translate('math')} - ${lang.translate('level')} $_level'),
+        backgroundColor: themeColor,
         foregroundColor: Colors.white,
         leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => setState(() => _gameStarted = false)),
       ),
@@ -204,11 +210,11 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
               textAlign: TextAlign.center,
               autofocus: true,
               style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: '?',
                 filled: true,
-                fillColor: Colors.red[50],
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                fillColor: Color(0xFFF5F5F5),
+                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
               ),
               onSubmitted: (_) => _checkAnswer(),
             ),
@@ -216,28 +222,19 @@ class _MathGamePageState extends ConsumerState<MathGamePage> {
             ElevatedButton(
               onPressed: _checkAnswer,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
+                backgroundColor: themeColor,
                 foregroundColor: Colors.white,
                 minimumSize: const Size(double.infinity, 70),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               ),
-              child: const Text('CONFERIR', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              child: Text(lang.translate('check'), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             ),
             const SizedBox(height: 20),
-            Text('Acertos nesta rodada: $_score', style: const TextStyle(fontSize: 18, color: Colors.grey)),
+            Text('${lang.translate('score')}: $_score', style: const TextStyle(fontSize: 18, color: Colors.grey)),
           ],
         ),
       ),
     );
-  }
-
-  String _typeName(MathType type) {
-    switch (type) {
-      case MathType.addition: return 'Soma';
-      case MathType.subtraction: return 'Subtração';
-      case MathType.multiplication: return 'Multiplicação';
-      case MathType.division: return 'Divisão';
-    }
   }
 
   String _typeChar(MathType type) {

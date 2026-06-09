@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/settings_provider.dart';
 
 class MenuPage extends ConsumerWidget {
   const MenuPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final themeColor = ref.watch(themeColorProvider);
+    final langNotifier = ref.read(languageProvider.notifier);
+    // Watch languageProvider to rebuild when language changes
+    ref.watch(languageProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('EducaPlay'),
         centerTitle: true,
-        backgroundColor: Colors.orange,
+        backgroundColor: themeColor,
         foregroundColor: Colors.white,
       ),
       body: Container(
@@ -19,23 +25,23 @@ class MenuPage extends ConsumerWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.orange[100]!, Colors.white],
+            colors: [themeColor.withOpacity(0.2), Colors.white],
           ),
         ),
         child: Column(
           children: [
             const SizedBox(height: 40),
-            const Text(
-              'Bem-vindo ao EducaPlay!',
+            Text(
+              langNotifier.translate('welcome'),
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Colors.orange,
+                color: themeColor,
               ),
             ),
-            const Text(
-              'Escolha uma atividade abaixo:',
-              style: TextStyle(fontSize: 18, color: Colors.black54),
+            Text(
+              langNotifier.translate('choose_activity'),
+              style: const TextStyle(fontSize: 18, color: Colors.black54),
             ),
             const SizedBox(height: 40),
             Expanded(
@@ -47,31 +53,31 @@ class MenuPage extends ConsumerWidget {
                 children: [
                   _buildMenuCard(
                     context,
-                    'Músicas',
+                    langNotifier.translate('music'),
                     Icons.music_note,
                     Colors.blue,
                     '/music',
                   ),
                   _buildMenuCard(
                     context,
-                    'Leitura',
+                    langNotifier.translate('reading'),
                     Icons.book,
                     Colors.green,
                     '/reading',
                   ),
                   _buildMenuCard(
                     context,
-                    'Jogos',
+                    langNotifier.translate('games'),
                     Icons.videogame_asset,
                     Colors.red,
                     '/games',
                   ),
                   _buildMenuCard(
                     context,
-                    'Ajustes',
+                    langNotifier.translate('settings'),
                     Icons.settings,
                     Colors.purple,
-                    null,
+                    '/settings',
                   ),
                 ],
               ),
